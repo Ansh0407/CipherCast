@@ -4,47 +4,68 @@ import { useWeb3 } from '../contexts/Web3Context';
 const VoteComponent = () => {
   const { contract } = useWeb3();
   const [candidateID, setCandidateID] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
   const handleVote = async () => {
-    if (!candidateID) {
-      alert('Please enter a valid Candidate ID');
+    if (!candidateID || candidateID <= 0 || isNaN(candidateID)) {
+      alert('Please enter a valid positive Candidate ID');
+      return;
+    }
+
+    if (!contract) {
+      alert('Web3 contract not initialized. Please refresh the page or check your connection.');
+      return;
+    }
+
+    if (!window.ethereum || !window.ethereum.selectedAddress) {
+      alert('MetaMask is not connected. Please connect your wallet.');
       return;
     }
 
     try {
       await contract.methods.vote(candidateID).send({ from: window.ethereum.selectedAddress });
-      alert('Vote cast successfully!');
+      setSuccessMessage('Vote cast successfully!');
+      setErrorMessage('');
       setCandidateID('');
     } catch (error) {
       console.error('Error casting vote:', error);
-      alert('Failed to cast vote');
+      setSuccessMessage('');
+      setErrorMessage('Failed to cast vote. Please try again later.');
     }
   };
 
   return (
-    <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center">
-      <div className="bg-white p-6 rounded-lg shadow-2xl w-full max-w-md">
-        <h2 className="text-2xl font-bold mb-6 text-center text-gray-700">Cast Your Vote</h2>
-        
-        <div className="mb-4">
-          <label className="block text-gray-600 mb-2">Candidate ID</label>
-          <input
-            type="number"
-            value={candidateID}
-            onChange={(e) => setCandidateID(e.target.value)}
-            placeholder="Enter Candidate ID"
-            className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
-          />
-        </div>
-
-        <button
-          onClick={handleVote}
-          className="w-full bg-green-600 text-white px-4 py-3 rounded-lg hover:bg-green-700 transition-all"
-        >
-          Vote
-        </button>
+    <div className=" w-full p-8 mt-20 relative z-10">
+    <div className="bg-white rounded-lg w-full max-w-md mx-auto p-8 shadow-lg">
+      <h2 className="text-2xl font-bold mb-8 text-center text-gray-700">Cast Your Vote</h2>
+      
+      {successMessage && (
+        <p className="text-center text-green-600 mb-6">{successMessage}</p>
+      )}
+      {errorMessage && (
+        <p className="text-center text-red-600 mb-6">{errorMessage}</p>
+      )}
+  
+      <div className="mb-6">
+        <label className="block text-black font-bold mb-4">Candidate ID</label>
+        <input
+          type="number"
+          value={candidateID}
+          onChange={(e) => setCandidateID(e.target.value)}
+          placeholder="Enter Candidate ID"
+          className="w-full p-4 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500 placeholder-gray-300 text-black"
+        />
       </div>
+  
+      <button
+        onClick={handleVote}
+        className="w-full bg-green-600 text-white px-6 py-4 rounded-lg hover:bg-green-700 transition-all text-lg"
+      >
+        Vote
+      </button>
     </div>
+  </div>
   );
 };
 

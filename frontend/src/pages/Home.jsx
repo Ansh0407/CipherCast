@@ -10,6 +10,7 @@ import ConnectWallet from "../components/ConnectWallet";
 import SetVotingDates from "../components/SetVotingDates";
 import VoteComponent from "../components/VoteComponent";
 import VotingStatus from "../components/VotingStatus";
+import CandidateVotePage from "./CandidateVotingDashboard"; // Import the CandidateVotePage
 
 const Home = () => {
   const { connectWallet, account } = useWeb3();
@@ -29,52 +30,58 @@ const Home = () => {
 
   return (
     <Router>
-      <div className="relative w-full h-screen">
-        {/* Navbar (Handles Navigation) */}
+      <div className="relative w-full h-screen overflow-hidden">
         <Navbar />
 
-        {/* Background Image */}
         <div
-          className="absolute top-0 left-0 w-full h-full bg-cover bg-center"
+          className="absolute top-0 left-0 w-full h-full bg-cover bg-center z-0"
           style={{
             backgroundImage: `url(${backgroundImage})`,
             filter: "brightness(50%)",
           }}
         ></div>
 
-        {/* Routes for Navigation */}
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <div className="relative flex flex-col items-center justify-center h-full text-white text-center px-4">
-                <h1 className="text-4xl md:text-6xl font-bold">
-                  WELCOME TO <br />
-                  <span className="text-red-500">DIGITAL VOTING</span>
-                </h1>
-                <p className="text-lg mt-4">Ensuring transparency and security in voting.</p>
+        <div className="relative z-10 flex flex-col h-full">
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <div className="flex-grow flex flex-col items-center justify-center text-white text-center px-4">
+                  <h1 className="text-4xl md:text-6xl font-bold">
+                    WELCOME TO <br />
+                    <span className="text-red-500">DIGITAL VOTING</span>
+                  </h1>
+                  <p className="text-lg mt-4">
+                    Ensuring transparency and security in voting.
+                  </p>
 
-                {/* Connect Wallet Button */}
-                <button
-                  onClick={handleConnect}
-                  className="mt-6 px-6 py-3 text-lg font-semibold border border-white rounded-full hover:bg-white hover:text-blue-600 transition-all"
-                  disabled={loading}
-                >
-                  {loading ? "Connecting..." : account ? `Connected: ${account}` : "Connect Wallet"}
-                </button>
-              </div>
-            }
-          />
-          <Route path="/connect-wallet" element={<ConnectWallet />} />
-          <Route path="/add-candidate" element={<AddCandidate />} />
-          <Route path="/candidates" element={<CandidateList />} />
-          <Route path="/set-voting-dates" element={<SetVotingDates />} />
-          <Route path="/vote" element={<VoteComponent />} />
-          <Route path="/status" element={<VotingStatus />} />
-        </Routes>
-
-        {/* Footer */}
-        <Footer />
+                  <button
+                    onClick={handleConnect}
+                    className="mt-6 px-6 py-3 text-lg font-semibold border border-white rounded-full hover:bg-white hover:text-blue-600 transition-all"
+                    disabled={loading}
+                  >
+                    {loading
+                      ? "Connecting..."
+                      : account
+                      ? `Connected: ${account}`
+                      : "Connect Wallet"}
+                  </button>
+                </div>
+              }
+            />
+            <Route path="/connect-wallet" element={<ConnectWallet />} />
+            <Route path="/add-candidate" element={<AddCandidate />} />
+            <Route path="/candidates" element={<CandidateList />} />
+            <Route path="/set-voting-dates" element={<SetVotingDates />} />
+            <Route path="/vote" element={<VoteComponent />} />
+            <Route path="/status" element={<VotingStatus />} />
+            <Route
+              path="/candidate-vote-page"
+              element={<CandidateVotePage />}
+            />
+          </Routes>
+          <Footer />
+        </div>
       </div>
     </Router>
   );
