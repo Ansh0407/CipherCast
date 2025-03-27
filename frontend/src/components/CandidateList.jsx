@@ -6,34 +6,48 @@ const CandidateList = () => {
   const [candidates, setCandidates] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchCandidates = async () => {
-      if (!contract) return;
+  const fetchCandidates = async () => {
+    if (!contract) return;
 
-      try {
-        setIsLoading(true);
-        const count = await contract.methods.getCountCandidates().call();
-        const candidateArray = [];
-        for (let i = 1; i <= count; i++) {
-          const candidate = await contract.methods.getCandidate(i).call();
-          candidateArray.push({
-            id: candidate[0],
-            name: candidate[1],
-            party: candidate[2],
-            voteCount: candidate[3],
-          });
-        }
-        setCandidates(candidateArray);
-      } catch (error) {
-        console.error('Error fetching candidates:', error);
-        setCandidates([]);
-      } finally {
-        setIsLoading(false);
+    try {
+      setIsLoading(true);
+      const count = await contract.methods.getCountCandidates().call();
+      const candidateArray = [];
+      for (let i = 1; i <= count; i++) {
+        const candidate = await contract.methods.getCandidate(i).call();
+        candidateArray.push({
+          id: candidate[0],
+          name: candidate[1],
+          party: candidate[2],
+          voteCount: parseInt(candidate[3], 10),
+        });
       }
-    };
+      setCandidates(candidateArray);
+    } catch (error) {
+      console.error('Error fetching candidates:', error);
+      setCandidates([]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
+  // Re-fetch candidates periodically to reflect live updates
+  useEffect(() => {
     fetchCandidates();
+    const interval = setInterval(fetchCandidates, 5000); // Poll every 5 seconds
+    return () => clearInterval(interval); // Cleanup interval on component unmount
   }, [contract]);
+
+  // Determine the ID of the candidate with the highest vote count
+  const getTopCandidateId = () => {
+    if (candidates.length === 0) return null;
+    const topCandidate = candidates.reduce((prev, current) =>
+      prev.voteCount > current.voteCount ? prev : current
+    );
+    return topCandidate.id;
+  };
+
+  const topCandidateId = getTopCandidateId();
 
   return (
     <div className="bg-white w-full max-w-4xl mt-30 p-6 relative z-50">
@@ -52,7 +66,12 @@ const CandidateList = () => {
           </thead>
           <tbody>
             {candidates.map((candidate) => (
-              <tr key={candidate.id} className="hover:bg-gray-100">
+              <tr
+                key={candidate.id}
+                className={`hover:bg-gray-100 ${
+                  candidate.id === topCandidateId ? 'bg-green-100' : ''
+                }`}
+              >
                 <td className="border border-gray-300 p-3">{candidate.id}</td>
                 <td className="border border-gray-300 p-3">{candidate.name}</td>
                 <td className="border border-gray-300 p-3">{candidate.party}</td>
