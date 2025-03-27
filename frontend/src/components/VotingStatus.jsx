@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useWeb3 } from '../contexts/Web3Context';
 
 const VotingStatus = () => {
@@ -45,11 +45,6 @@ const VotingStatus = () => {
     <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20 bg-white p-6 rounded-lg shadow-2xl w-full max-w-md border border-gray-300">
       <h2 className="text-2xl font-bold mb-6 text-center text-gray-700">Voting Status</h2>
       
-      <div className="mb-4 p-4 bg-gray-100 rounded-md">
-        <p className="text-lg font-semibold text-gray-700">📅 Voting Period</p>
-        <p className="text-gray-600">{startDate} - {endDate}</p>
-      </div>
-
       <div className={`p-4 rounded-md ${hasVoted ? 'bg-green-100' : 'bg-red-100'}`}>
         <p className="text-lg font-semibold text-gray-700">🗳 Your Vote Status</p>
         <p className={`font-medium ${hasVoted ? 'text-green-600' : 'text-red-600'}`}>
