@@ -1,8 +1,17 @@
+import { useState, useCallback } from "react";
+import { Link } from "react-router-dom";
 import CandidateList from "../components/CandidateList";
 import VoteComponent from "../components/VoteComponent";
-import { Link } from "react-router-dom";
 
 const CandidateVotePage = () => {
+  const [voteKey, setVoteKey] = useState(0);
+
+  // Callback to trigger re-render of CandidateList
+  const handleVoteUpdate = useCallback(() => {
+    // Increment the key to force CandidateList to re-fetch candidates
+    setVoteKey(prevKey => prevKey + 1);
+  }, []);
+
   return (
     <div
       className="flex flex-col h-screen overflow-hidden"
@@ -32,15 +41,15 @@ const CandidateVotePage = () => {
 
       {/* Main Content */}
       <div className="flex flex-1 p-4">
-        <div className="w-1/2  bg-opacity-90 p-6 rounded-lg shadow-lg text-gray-200">
+        <div className="w-1/2 bg-opacity-90 p-6 rounded-lg shadow-lg text-gray-200">
           <div className="flex-1">
-            <CandidateList />
+            <CandidateList key={voteKey} />
           </div>
         </div>
 
         <div className="w-1/2 p-6 rounded-lg shadow-lg ml-4 text-gray-200">
           <div className="flex-1">
-            <VoteComponent />
+            <VoteComponent updateVoteCount={handleVoteUpdate} />
           </div>
         </div>
       </div>

@@ -1,13 +1,17 @@
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useWeb3 } from '../contexts/Web3Context';
 
 const CandidateList = () => {
   const { contract } = useWeb3();
   const [candidates, setCandidates] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchCandidates = async () => {
+      if (!contract) return;
+
       try {
+        setIsLoading(true);
         const count = await contract.methods.getCountCandidates().call();
         const candidateArray = [];
         for (let i = 1; i <= count; i++) {
@@ -22,6 +26,9 @@ const CandidateList = () => {
         setCandidates(candidateArray);
       } catch (error) {
         console.error('Error fetching candidates:', error);
+        setCandidates([]);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -31,7 +38,9 @@ const CandidateList = () => {
   return (
     <div className="bg-white w-full max-w-4xl mt-30 p-6 relative z-50">
       <h2 className="align-center text-2xl font-bold mb-4 text-black">Candidate List</h2>
-      {candidates.length > 0 ? (
+      {isLoading ? (
+        <p className="text-center text-gray-600">Loading candidates...</p>
+      ) : candidates.length > 0 ? (
         <table className="text-center text-black table-auto w-full border-collapse border border-gray-300">
           <thead>
             <tr className="bg-gray-200">
