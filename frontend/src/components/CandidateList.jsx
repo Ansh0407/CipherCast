@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { useWeb3 } from '../contexts/Web3Context';
+import { useState, useEffect } from "react";
+import { useWeb3 } from "../contexts/Web3Context";
 
 const CandidateList = () => {
   const { contract } = useWeb3();
@@ -24,21 +24,19 @@ const CandidateList = () => {
       }
       setCandidates(candidateArray);
     } catch (error) {
-      console.error('Error fetching candidates:', error);
+      console.error("Error fetching candidates:", error);
       setCandidates([]);
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Re-fetch candidates periodically to reflect live updates
   useEffect(() => {
     fetchCandidates();
-    const interval = setInterval(fetchCandidates, 5000); // Poll every 5 seconds
-    return () => clearInterval(interval); // Cleanup interval on component unmount
+    const interval = setInterval(fetchCandidates, 5000);
+    return () => clearInterval(interval);
   }, [contract]);
 
-  // Determine the ID of the candidate with the highest vote count
   const getTopCandidateId = () => {
     if (candidates.length === 0) return null;
     const topCandidate = candidates.reduce((prev, current) =>
@@ -51,7 +49,9 @@ const CandidateList = () => {
 
   return (
     <div className="bg-white w-full max-w-4xl mt-30 p-6 relative z-50">
-      <h2 className="align-center text-2xl font-bold mb-4 text-black">Candidate List</h2>
+      <h2 className="align-center text-2xl font-bold mb-4 text-black">
+        Candidate List
+      </h2>
       {isLoading ? (
         <p className="text-center text-gray-600">Loading candidates...</p>
       ) : candidates.length > 0 ? (
@@ -69,13 +69,17 @@ const CandidateList = () => {
               <tr
                 key={candidate.id}
                 className={`hover:bg-gray-100 ${
-                  candidate.id === topCandidateId ? 'bg-green-100' : ''
+                  candidate.id === topCandidateId ? "bg-green-100" : ""
                 }`}
               >
                 <td className="border border-gray-300 p-3">{candidate.id}</td>
                 <td className="border border-gray-300 p-3">{candidate.name}</td>
-                <td className="border border-gray-300 p-3">{candidate.party}</td>
-                <td className="border border-gray-300 p-3">{candidate.voteCount}</td>
+                <td className="border border-gray-300 p-3">
+                  {candidate.party}
+                </td>
+                <td className="border border-gray-300 p-3">
+                  {candidate.voteCount}
+                </td>
               </tr>
             ))}
           </tbody>

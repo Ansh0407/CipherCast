@@ -28,7 +28,6 @@ const VoteComponent = ({ updateVoteCount }) => {
       setSuccessMessage('Vote cast successfully!');
       setErrorMessage('');
       
-      // Call the updateVoteCount prop to trigger re-render
       updateVoteCount(candidateID);
       
       setCandidateID('');

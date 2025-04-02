@@ -31,7 +31,7 @@ const SetVotingDates = () => {
         .send({ from: window.ethereum.selectedAddress });
 
       alert("Voting dates set successfully!");
-      fetchDates(); // Refresh after setting
+      fetchDates();
     } catch (error) {
       console.error("Error setting dates:", error);
       alert("Failed to set voting dates");
