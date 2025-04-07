@@ -10,7 +10,7 @@ import ConnectWallet from "../components/ConnectWallet";
 import SetVotingDates from "../components/SetVotingDates";
 import VoteComponent from "../components/VoteComponent";
 import VotingStatus from "../components/VotingStatus";
-import CandidateVotePage from "./CandidateVotingDashboard"; // Import the CandidateVotePage
+import CandidateVotePage from "./CandidateVotingDashboard";
 
 const Home = () => {
   const { connectWallet, account } = useWeb3();

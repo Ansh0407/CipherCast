@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useWeb3 } from '../contexts/Web3Context';
+import Footer from "../components/Footer";
 
 const VotingStatus = () => {
   const { contract } = useWeb3();
@@ -21,14 +22,12 @@ const VotingStatus = () => {
   };
 
   useEffect(() => {
-    fetchStatus(); // Initial fetch
+    fetchStatus(); 
 
-    // Auto-update every 10 seconds
     const interval = setInterval(() => {
       fetchStatus();
     }, 10000);
 
-    // Detect account changes
     if (window.ethereum) {
       window.ethereum.on("accountsChanged", fetchStatus);
     }
@@ -42,6 +41,7 @@ const VotingStatus = () => {
   }, [contract]);
 
   return (
+    <div className="relative z-10 flex flex-col h-full">
     <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20 bg-white p-6 rounded-lg shadow-2xl w-full max-w-md border border-gray-300">
       <h2 className="text-2xl font-bold mb-6 text-center text-gray-700">Voting Status</h2>
       
@@ -51,6 +51,8 @@ const VotingStatus = () => {
           {hasVoted ? '✅ You have voted' : '❌ You have not voted'}
         </p>
       </div>
+    </div>
+    <Footer/>
     </div>
   );
 };

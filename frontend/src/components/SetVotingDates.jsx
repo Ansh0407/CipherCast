@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useWeb3 } from "../contexts/Web3Context";
+import Footer from "../components/Footer";
 
 const SetVotingDates = () => {
   const { contract } = useWeb3();
@@ -45,28 +46,32 @@ const SetVotingDates = () => {
   }, [contract]);
 
   return (
-    <div
-      className="p-4 bg-white shadow-lg rounded-lg z-50 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
-    >
-      <h2 className="text-2xl font-bold mb-4">Set Voting Dates</h2>
-      <input
-        type="datetime-local"
-        value={startDate}
-        onChange={(e) => setStartDate(e.target.value)}
-        className="border p-2 w-full mb-2"
-      />
-      <input
-        type="datetime-local"
-        value={endDate}
-        onChange={(e) => setEndDate(e.target.value)}
-        className="border p-2 w-full mb-2"
-      />
-      <button
-        onClick={handleSetDates}
-        className="bg-blue-500 text-white px-4 py-2 rounded w-full hover:bg-blue-700"
-      >
-        Set Voting Dates
-      </button>
+    <div className="min-h-screen flex flex-col">
+      <main className="flex-grow flex items-center justify-center">
+        <div className="p-6 bg-white shadow-lg rounded-lg w-full max-w-md">
+          <h2 className="text-2xl font-bold mb-4">Set Voting Dates</h2>
+          <input
+            type="datetime-local"
+            value={startDate}
+            onChange={(e) => setStartDate(e.target.value)}
+            className="border p-2 w-full mb-2"
+          />
+          <input
+            type="datetime-local"
+            value={endDate}
+            onChange={(e) => setEndDate(e.target.value)}
+            className="border p-2 w-full mb-2"
+          />
+          <button
+            onClick={handleSetDates}
+            className="bg-blue-500 text-white px-4 py-2 rounded w-full hover:bg-blue-700"
+          >
+            Set Voting Dates
+          </button>
+        </div>
+      </main>
+
+     <Footer/>
     </div>
   );
 };
