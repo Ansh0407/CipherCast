@@ -11,6 +11,7 @@ import SetVotingDates from "../components/SetVotingDates";
 import VoteComponent from "../components/VoteComponent";
 import VotingStatus from "../components/VotingStatus";
 import CandidateVotePage from "./CandidateVotingDashboard";
+import Results from "./Results"; // 👈 added import
 
 const Home = () => {
   const { connectWallet, account } = useWeb3();
@@ -79,6 +80,7 @@ const Home = () => {
               path="/candidate-vote-page"
               element={<CandidateVotePage />}
             />
+            <Route path="/results" element={<Results />} /> {/* 👈 added route */}
           </Routes>
           <Footer />
         </div>

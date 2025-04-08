@@ -18,7 +18,6 @@ const Navbar = () => {
               Home
             </Link>
           </li>
-
           <li>
             <Link to="/add-candidate" className="hover:underline">
               Add Candidate
@@ -39,7 +38,11 @@ const Navbar = () => {
               Voting Status
             </Link>
           </li>
-
+          <li>
+            <Link to="/results" className="hover:underline">
+              Results
+            </Link>
+          </li>
         </ul>
       </div>
     </nav>

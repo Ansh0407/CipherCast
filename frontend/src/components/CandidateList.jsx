@@ -19,7 +19,7 @@ const CandidateList = () => {
           id: candidate[0],
           name: candidate[1],
           party: candidate[2],
-          voteCount: parseInt(candidate[3], 10),
+          // voteCount removed
         });
       }
       setCandidates(candidateArray);
@@ -37,16 +37,6 @@ const CandidateList = () => {
     return () => clearInterval(interval);
   }, [contract]);
 
-  const getTopCandidateId = () => {
-    if (candidates.length === 0) return null;
-    const topCandidate = candidates.reduce((prev, current) =>
-      prev.voteCount > current.voteCount ? prev : current
-    );
-    return topCandidate.id;
-  };
-
-  const topCandidateId = getTopCandidateId();
-
   return (
     <div className="bg-white w-full max-w-4xl mt-30 p-6 relative z-50">
       <h2 className="align-center text-2xl font-bold mb-4 text-black">
@@ -61,25 +51,14 @@ const CandidateList = () => {
               <th className="border border-gray-300 p-3 text-left">ID</th>
               <th className="border border-gray-300 p-3 text-left">Name</th>
               <th className="border border-gray-300 p-3 text-left">Party</th>
-              <th className="border border-gray-300 p-3 text-left">Votes</th>
             </tr>
           </thead>
           <tbody>
             {candidates.map((candidate) => (
-              <tr
-                key={candidate.id}
-                className={`hover:bg-gray-100 ${
-                  candidate.id === topCandidateId ? "bg-green-100" : ""
-                }`}
-              >
+              <tr key={candidate.id} className="hover:bg-gray-100">
                 <td className="border border-gray-300 p-3">{candidate.id}</td>
                 <td className="border border-gray-300 p-3">{candidate.name}</td>
-                <td className="border border-gray-300 p-3">
-                  {candidate.party}
-                </td>
-                <td className="border border-gray-300 p-3">
-                  {candidate.voteCount}
-                </td>
+                <td className="border border-gray-300 p-3">{candidate.party}</td>
               </tr>
             ))}
           </tbody>
