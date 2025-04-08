@@ -5,8 +5,7 @@ import Home from "./pages/Home";
 const App = () => {
   return (
     <Web3Provider>
-      <Home />
-      
+      <Home /> 
     </Web3Provider>
   );
 };
