@@ -14,7 +14,6 @@ import {
 } from "chart.js";
 import { Bar, Pie } from "react-chartjs-2";
 
-// Register chart.js components
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -68,39 +67,8 @@ const GeneratePDF = () => {
     );
   };
 
-  const generatePDF = async () => {
-    const element = chartRef.current;
-    const canvas = await html2canvas(element, {
-      scale: 2,
-      useCORS: true,
-    });
-    const imgData = canvas.toDataURL("image/png");
-
-    const pdf = new jsPDF("p", "mm", "a4");
-    const pageWidth = pdf.internal.pageSize.getWidth();
-    const date = new Date().toLocaleString();
-
-    pdf.setFontSize(18);
-    pdf.setTextColor("#1f2937"); // dark gray
-    pdf.text("🗳️ Election Results", 20, 20);
-
-    pdf.setFontSize(10);
-    pdf.setTextColor("#6b7280"); // light gray
-    pdf.text(`Generated on: ${date}`, 20, 26);
-
-    const imgProps = pdf.getImageProperties(imgData);
-    const pdfWidth = pageWidth - 20;
-    const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-
-    pdf.addImage(imgData, "PNG", 10, 35, pdfWidth, pdfHeight);
-    pdf.save("election-results.pdf");
-
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
-
   const topCandidate = getTopCandidate();
 
-  // Prepare chart data
   const chartLabels = candidates.map((c) => c.name);
   const chartVotes = candidates.map((c) => c.voteCount);
 
@@ -149,14 +117,16 @@ const GeneratePDF = () => {
   };
 
   return (
-    <div className="bg-white w-full max-w-4xl mt-10 p-6 relative z-50 rounded-lg shadow-lg">
-      <h2 className="text-2xl font-bold mb-4 text-black">Election Results</h2>
+    <div className="bg-white w-full mt-10 p-10 relative z-50 rounded-lg shadow-lg">
+      <h2 className=" text-3xl font-bold mb-4 text-black text-center">
+        Election Results
+      </h2>
 
       {isLoading ? (
         <p className="text-center text-gray-600">Loading results...</p>
       ) : candidates.length > 0 ? (
         <>
-          <div ref={chartRef} className="bg-gray-50 p-4 rounded-md shadow-md">
+          <div ref={chartRef} className="bg-gray-50 rounded-md shadow-md">
             <p className="text-lg font-semibold mb-2 text-black">
               🏆 Winner:{" "}
               <span className="text-green-600">
@@ -166,63 +136,63 @@ const GeneratePDF = () => {
               votes
             </p>
 
-            <table className="text-center text-black table-auto w-full border-collapse border border-gray-300 mt-4">
-              <thead>
-                <tr className="bg-gray-200">
-                  <th className="border border-gray-300 p-3 text-left">ID</th>
-                  <th className="border border-gray-300 p-3 text-left">Name</th>
-                  <th className="border border-gray-300 p-3 text-left">
-                    Party
-                  </th>
-                  <th className="border border-gray-300 p-3 text-left">
-                    Votes
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {candidates.map((c) => (
-                  <tr
-                    key={c.id}
-                    className={`hover:bg-gray-100 ${
-                      c.id === topCandidate.id ? "bg-green-100" : ""
-                    }`}
-                  >
-                    <td className="border border-gray-300 p-3">{c.id}</td>
-                    <td className="border border-gray-300 p-3">{c.name}</td>
-                    <td className="border border-gray-300 p-3">{c.party}</td>
-                    <td className="border border-gray-300 p-3">
-                      {c.voteCount}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-
-            {/* Graphs */}
-            <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="bg-white p-4 rounded-md shadow border h-[300px]">
-                <h3 className="text-center font-semibold mb-2 text-black text-sm">
-                  Votes Distribution (Bar)
-                </h3>
-                <Bar data={barData} options={chartOptions} />
+            <div className="flex flex-col md:flex-row gap-8 mt-4">
+              <div className="md:w-5/12 p-2">
+                <table className="text-center text-black table-auto w-full border-collapse border border-gray-300">
+                  <thead>
+                    <tr className="bg-gray-200">
+                      <th className="border border-gray-300 p-3 text-left">
+                        ID
+                      </th>
+                      <th className="border border-gray-300 p-3 text-left">
+                        Name
+                      </th>
+                      <th className="border border-gray-300 p-3 text-left">
+                        Party
+                      </th>
+                      <th className="border border-gray-300 p-3 text-left">
+                        Votes
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {candidates.map((c) => (
+                      <tr
+                        key={c.id}
+                        className={`hover:bg-gray-100 ${
+                          c.id === topCandidate.id ? "bg-green-100" : ""
+                        }`}
+                      >
+                        <td className="border border-gray-300 p-3">{c.id}</td>
+                        <td className="border border-gray-300 p-3">{c.name}</td>
+                        <td className="border border-gray-300 p-3">
+                          {c.party}
+                        </td>
+                        <td className="border border-gray-300 p-3">
+                          {c.voteCount}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
 
-              <div className="bg-white p-4 rounded-md shadow border h-[300px]">
-                <h3 className="text-center font-semibold mb-2 text-black text-sm">
-                  Votes Share (Pie)
-                </h3>
-                <Pie data={pieData} options={chartOptions} />
+              <div className="md:w-7/12 flex flex-col gap-4 pl-4">
+                <div className="bg-white p-4 rounded-md shadow border h-64">
+                  <h3 className="text-center font-semibold mb-2 text-black text-sm">
+                    Votes Distribution (Bar)
+                  </h3>
+                  <Bar data={barData} options={chartOptions} />
+                </div>
+
+                <div className="bg-white p-4 rounded-md shadow border h-64 mt-4">
+                  <h3 className="text-center font-semibold mb-2 text-black text-sm">
+                    Votes Share (Pie)
+                  </h3>
+                  <Pie data={pieData} options={chartOptions} />
+                </div>
               </div>
             </div>
-          </div>
-
-          <div className="mt-6 text-center">
-            <button
-              onClick={generatePDF}
-              className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition-all"
-            >
-              Download Results as PDF
-            </button>
           </div>
         </>
       ) : (
